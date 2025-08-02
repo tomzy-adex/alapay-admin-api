@@ -1,0 +1,354 @@
+{
+  "info": {
+    "name": "ALAPAY Payment API - Individual User",
+    "description": "Complete Postman collection for testing ALAPAY subscription payment endpoints with Interswitch integration",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:6545",
+      "type": "string"
+    },
+    {
+      "key": "apiVersion",
+      "value": "api/v1",
+      "type": "string"
+    },
+    {
+      "key": "jwtToken",
+      "value": "your_jwt_token_here",
+      "type": "string"
+    },
+    {
+      "key": "testHmoId",
+      "value": "123e4567-e89b-12d3-a456-426614174000",
+      "type": "string"
+    },
+    {
+      "key": "testPlanId",
+      "value": "123e4567-e89b-12d3-a456-426614174001",
+      "type": "string"
+    },
+    {
+      "key": "testPaymentOptionId",
+      "value": "123e4567-e89b-12d3-a456-426614174002",
+      "type": "string"
+    },
+    {
+      "key": "testTransactionReference",
+      "value": "TXN_123456789_20240101",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwtToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        },
+        "description": "Check if the server is running and healthy"
+      },
+      "response": []
+    },
+    {
+      "name": "API Base",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/{{apiVersion}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{apiVersion}}"]
+        },
+        "description": "Test the base API endpoint"
+      },
+      "response": []
+    },
+    {
+      "name": "Subscription Payments",
+      "item": [
+        {
+          "name": "Generate Payment Link",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hmoId\": \"{{testHmoId}}\",\n  \"planId\": \"{{testPlanId}}\",\n  \"paymentOptionId\": \"{{testPaymentOptionId}}\",\n  \"amount\": 5000000,\n  \"customerEmail\": \"test@example.com\",\n  \"customerPhone\": \"+2348012345678\",\n  \"customerName\": \"John Doe\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/subscription/generate-link",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "subscription", "generate-link"]
+            },
+            "description": "Generate a payment link for HMO subscription using Interswitch"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionReference\": \"{{testTransactionReference}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/subscription/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "subscription", "verify"]
+            },
+            "description": "Verify a payment with Interswitch and activate subscription if successful"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/subscription/status/{{testTransactionReference}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "subscription", "status", "{{testTransactionReference}}"]
+            },
+            "description": "Get the current status of a subscription payment"
+          },
+          "response": []
+        },
+        {
+          "name": "Payment Callback",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/subscription/callback?transactionReference={{testTransactionReference}}&status=COMPLETED",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "subscription", "callback"],
+              "query": [
+                {
+                  "key": "transactionReference",
+                  "value": "{{testTransactionReference}}"
+                },
+                {
+                  "key": "status",
+                  "value": "COMPLETED"
+                }
+              ]
+            },
+            "description": "Handle successful payment redirects from Interswitch"
+          },
+          "response": []
+        },
+        {
+          "name": "Payment Cancel",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/subscription/cancel?transactionReference={{testTransactionReference}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "subscription", "cancel"],
+              "query": [
+                {
+                  "key": "transactionReference",
+                  "value": "{{testTransactionReference}}"
+                }
+              ]
+            },
+            "description": "Handle payment cancellation redirects from Interswitch"
+          },
+          "response": []
+        }
+      ],
+      "description": "All subscription payment related endpoints"
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "Interswitch Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-interswitch-signature",
+                "value": "test_signature_here",
+                "description": "Interswitch webhook signature for verification"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionReference\": \"{{testTransactionReference}}\",\n  \"status\": \"COMPLETED\",\n  \"paymentMethod\": \"CARD\",\n  \"amount\": 5000000,\n  \"paymentDate\": \"2024-01-01T12:00:00.000Z\",\n  \"merchantId\": \"2547916\",\n  \"merchantCode\": \"MX149785\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/webhook/interswitch",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "webhook", "interswitch"]
+            },
+            "description": "Handle payment status updates from Interswitch webhook"
+          },
+          "response": []
+        }
+      ],
+      "description": "Webhook endpoints for payment providers"
+    },
+    {
+      "name": "Test Data",
+      "item": [
+        {
+          "name": "Sample Payment Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hmoId\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"planId\": \"550e8400-e29b-41d4-a716-446655440001\",\n  \"paymentOptionId\": \"550e8400-e29b-41d4-a716-446655440002\",\n  \"amount\": 2500000,\n  \"customerEmail\": \"customer@alapay.com\",\n  \"customerPhone\": \"+2349012345678\",\n  \"customerName\": \"Alice Johnson\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/subscription/generate-link",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "subscription", "generate-link"]
+            },
+            "description": "Sample payment request with realistic test data"
+          },
+          "response": []
+        },
+        {
+          "name": "Sample Payment Verification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionReference\": \"TXN_1704067200000_ABC123DEF456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/subscription/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "subscription", "verify"]
+            },
+            "description": "Sample payment verification request"
+          },
+          "response": []
+        }
+      ],
+      "description": "Test data and sample requests"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set default headers for all requests",
+          "pm.request.headers.add({\n    key: 'Accept',\n    value: 'application/json'\n});",
+          "",
+          "// Log request details for debugging",
+          "console.log('Request URL:', pm.request.url.toString());",
+          "console.log('Request Method:', pm.request.method);"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Common test script for all requests",
+          "pm.test('Status code is 200 or 201', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+          "});",
+          "",
+          "pm.test('Response has JSON content type', function () {",
+          "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+          "});",
+          "",
+          "pm.test('Response time is less than 5000ms', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});",
+          "",
+          "// Parse response body",
+          "const responseJson = pm.response.json();",
+          "",
+          "// Log response for debugging",
+          "console.log('Response:', JSON.stringify(responseJson, null, 2));",
+          "",
+          "// Store transaction reference if present",
+          "if (responseJson && responseJson.transactionReference) {",
+          "    pm.collectionVariables.set('testTransactionReference', responseJson.transactionReference);",
+          "    console.log('Stored transaction reference:', responseJson.transactionReference);",
+          "}"
+        ]
+      }
+    }
+  ]
+} 

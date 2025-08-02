@@ -1,0 +1,803 @@
+{
+  "info": {
+    "name": "ALAPAY Individual User API",
+    "description": "Complete Postman collection for ALAPAY Individual User API - Subscription payments, user management, and individual user operations with Interswitch integration",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:6545",
+      "type": "string"
+    },
+    {
+      "key": "apiVersion",
+      "value": "api/v1",
+      "type": "string"
+    },
+    {
+      "key": "jwtToken",
+      "value": "your_jwt_token_here",
+      "type": "string"
+    },
+    {
+      "key": "userId",
+      "value": "123e4567-e89b-12d3-a456-426614174000",
+      "type": "string"
+    },
+    {
+      "key": "hmoId",
+      "value": "123e4567-e89b-12d3-a456-426614174001",
+      "type": "string"
+    },
+    {
+      "key": "planId",
+      "value": "123e4567-e89b-12d3-a456-426614174002",
+      "type": "string"
+    },
+    {
+      "key": "paymentOptionId",
+      "value": "123e4567-e89b-12d3-a456-426614174003",
+      "type": "string"
+    },
+    {
+      "key": "transactionReference",
+      "value": "TXN_123456789_20240101",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwtToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/health",
+          "host": ["{{baseUrl}}"],
+          "path": ["health"]
+        },
+        "description": "Check if the server is running and healthy"
+      },
+      "response": []
+    },
+    {
+      "name": "API Base",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/{{apiVersion}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{apiVersion}}"]
+        },
+        "description": "Test the base API endpoint"
+      },
+      "response": []
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "User Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@alapay.com\",\n  \"password\": \"user123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "auth", "login"]
+            },
+            "description": "Login as individual user to get JWT token"
+          },
+          "response": []
+        },
+        {
+          "name": "User Registration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@example.com\",\n  \"password\": \"password123\",\n  \"phoneNumber\": \"+2348012345678\",\n  \"dateOfBirth\": \"1990-01-01\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "auth", "register"]
+            },
+            "description": "Register a new individual user"
+          },
+          "response": []
+        },
+        {
+          "name": "User Logout",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{jwtToken}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/auth/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "auth", "logout"]
+            },
+            "description": "Logout user and invalidate token"
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@alapay.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/auth/reset-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "auth", "reset-password"]
+            },
+            "description": "Send password reset email to user"
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldPassword\": \"oldpassword123\",\n  \"newPassword\": \"newpassword123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/auth/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "auth", "change-password"]
+            },
+            "description": "Change user password"
+          },
+          "response": []
+        }
+      ],
+      "description": "Authentication endpoints for individual users"
+    },
+    {
+      "name": "Subscription Payments",
+      "item": [
+        {
+          "name": "Generate Payment Link",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hmoId\": \"{{hmoId}}\",\n  \"planId\": \"{{planId}}\",\n  \"paymentOptionId\": \"{{paymentOptionId}}\",\n  \"amount\": 5000000,\n  \"customerEmail\": \"customer@example.com\",\n  \"customerPhone\": \"+2348012345678\",\n  \"customerName\": \"John Doe\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/subscription/generate-link",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "subscription", "generate-link"]
+            },
+            "description": "Generate a payment link for HMO subscription using Interswitch"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionReference\": \"{{transactionReference}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/subscription/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "subscription", "verify"]
+            },
+            "description": "Verify a payment with Interswitch and activate subscription if successful"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/subscription/status/{{transactionReference}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "subscription", "status", "{{transactionReference}}"]
+            },
+            "description": "Get the current status of a subscription payment"
+          },
+          "response": []
+        },
+        {
+          "name": "Payment Callback",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/subscription/callback?transactionReference={{transactionReference}}&status=COMPLETED",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "subscription", "callback"],
+              "query": [
+                {
+                  "key": "transactionReference",
+                  "value": "{{transactionReference}}"
+                },
+                {
+                  "key": "status",
+                  "value": "COMPLETED"
+                }
+              ]
+            },
+            "description": "Handle successful payment redirects from Interswitch"
+          },
+          "response": []
+        },
+        {
+          "name": "Payment Cancel",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/subscription/cancel?transactionReference={{transactionReference}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "subscription", "cancel"],
+              "query": [
+                {
+                  "key": "transactionReference",
+                  "value": "{{transactionReference}}"
+                }
+              ]
+            },
+            "description": "Handle payment cancellation redirects from Interswitch"
+          },
+          "response": []
+        }
+      ],
+      "description": "All subscription payment related endpoints"
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/user/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "user", "profile"]
+            },
+            "description": "Get current user profile"
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Updated\",\n  \"lastName\": \"Name\",\n  \"phoneNumber\": \"+2348012345678\",\n  \"dateOfBirth\": \"1990-01-01\",\n  \"address\": \"123 Main Street, Lagos, Nigeria\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/user/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "user", "profile"]
+            },
+            "description": "Update user profile information"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Subscriptions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/user/subscriptions?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "user", "subscriptions"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get user's active subscriptions"
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Payment History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/user/payments?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "user", "payments"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get user's payment history"
+          },
+          "response": []
+        }
+      ],
+      "description": "User management endpoints for individual users"
+    },
+    {
+      "name": "HMO & Plans",
+      "item": [
+        {
+          "name": "Get Available HMOs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/hmo/available?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "hmo", "available"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get list of available HMOs for subscription"
+          },
+          "response": []
+        },
+        {
+          "name": "Get HMO Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/hmo/{{hmoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "hmo", "{{hmoId}}"]
+            },
+            "description": "Get detailed information about a specific HMO"
+          },
+          "response": []
+        },
+        {
+          "name": "Get HMO Plans",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/hmo/{{hmoId}}/plans",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "hmo", "{{hmoId}}", "plans"]
+            },
+            "description": "Get available plans for a specific HMO"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Plan Details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/plan/{{planId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "plan", "{{planId}}"]
+            },
+            "description": "Get detailed information about a specific plan"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Payment Options",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/plan/{{planId}}/payment-options",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "plan", "{{planId}}", "payment-options"]
+            },
+            "description": "Get available payment options for a plan"
+          },
+          "response": []
+        }
+      ],
+      "description": "HMO and plan management endpoints"
+    },
+    {
+      "name": "Webhooks",
+      "item": [
+        {
+          "name": "Interswitch Webhook",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "x-interswitch-signature",
+                "value": "test_signature_here",
+                "description": "Interswitch webhook signature for verification"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionReference\": \"{{transactionReference}}\",\n  \"status\": \"COMPLETED\",\n  \"paymentMethod\": \"CARD\",\n  \"amount\": 5000000,\n  \"paymentDate\": \"2024-01-01T12:00:00.000Z\",\n  \"merchantId\": \"2547916\",\n  \"merchantCode\": \"MX149785\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/webhook/interswitch",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "webhook", "interswitch"]
+            },
+            "description": "Handle payment status updates from Interswitch webhook"
+          },
+          "response": []
+        }
+      ],
+      "description": "Webhook endpoints for payment providers"
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Get User Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/notifications?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "notifications"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get user notifications"
+          },
+          "response": []
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notificationId\": \"123e4567-e89b-12d3-a456-426614174000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/notifications/mark-read",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "notifications", "mark-read"]
+            },
+            "description": "Mark notification as read"
+          },
+          "response": []
+        }
+      ],
+      "description": "Notification management endpoints"
+    },
+    {
+      "name": "Test Data",
+      "item": [
+        {
+          "name": "Sample User Registration",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Alice\",\n  \"lastName\": \"Johnson\",\n  \"email\": \"alice.johnson@example.com\",\n  \"password\": \"password123\",\n  \"phoneNumber\": \"+2349012345678\",\n  \"dateOfBirth\": \"1985-05-15\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "auth", "register"]
+            },
+            "description": "Sample user registration with test data"
+          },
+          "response": []
+        },
+        {
+          "name": "Sample Payment Request",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hmoId\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"planId\": \"550e8400-e29b-41d4-a716-446655440001\",\n  \"paymentOptionId\": \"550e8400-e29b-41d4-a716-446655440002\",\n  \"amount\": 2500000,\n  \"customerEmail\": \"customer@alapay.com\",\n  \"customerPhone\": \"+2349012345678\",\n  \"customerName\": \"Alice Johnson\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/subscription/generate-link",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "subscription", "generate-link"]
+            },
+            "description": "Sample payment request with realistic test data"
+          },
+          "response": []
+        },
+        {
+          "name": "Sample Payment Verification",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionReference\": \"TXN_1704067200000_ABC123DEF456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/payment/subscription/verify",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "payment", "subscription", "verify"]
+            },
+            "description": "Sample payment verification request"
+          },
+          "response": []
+        }
+      ],
+      "description": "Test data and sample requests"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set default headers for all requests",
+          "pm.request.headers.add({\n    key: 'Accept',\n    value: 'application/json'\n});",
+          "",
+          "// Log request details for debugging",
+          "console.log('Request URL:', pm.request.url.toString());",
+          "console.log('Request Method:', pm.request.method);"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Common test script for all requests",
+          "pm.test('Status code is 200, 201, or 400', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 400]);",
+          "});",
+          "",
+          "pm.test('Response has JSON content type', function () {",
+          "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+          "});",
+          "",
+          "pm.test('Response time is less than 5000ms', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});",
+          "",
+          "// Parse response body",
+          "const responseJson = pm.response.json();",
+          "",
+          "// Log response for debugging",
+          "console.log('Response:', JSON.stringify(responseJson, null, 2));",
+          "",
+          "// Store JWT token if present in login response",
+          "if (responseJson && responseJson.token) {",
+          "    pm.collectionVariables.set('jwtToken', responseJson.token);",
+          "    console.log('Stored JWT token:', responseJson.token);",
+          "}",
+          "",
+          "// Store user ID if present",
+          "if (responseJson && responseJson.id) {",
+          "    pm.collectionVariables.set('userId', responseJson.id);",
+          "    console.log('Stored user ID:', responseJson.id);",
+          "}",
+          "",
+          "// Store transaction reference if present",
+          "if (responseJson && responseJson.transactionReference) {",
+          "    pm.collectionVariables.set('transactionReference', responseJson.transactionReference);",
+          "    console.log('Stored transaction reference:', responseJson.transactionReference);",
+          "}",
+          "",
+          "// Store HMO ID if present",
+          "if (responseJson && responseJson.hmoId) {",
+          "    pm.collectionVariables.set('hmoId', responseJson.hmoId);",
+          "    console.log('Stored HMO ID:', responseJson.hmoId);",
+          "}",
+          "",
+          "// Store plan ID if present",
+          "if (responseJson && responseJson.planId) {",
+          "    pm.collectionVariables.set('planId', responseJson.planId);",
+          "    console.log('Stored plan ID:', responseJson.planId);",
+          "}",
+          "",
+          "// Store payment option ID if present",
+          "if (responseJson && responseJson.paymentOptionId) {",
+          "    pm.collectionVariables.set('paymentOptionId', responseJson.paymentOptionId);",
+          "    console.log('Stored payment option ID:', responseJson.paymentOptionId);",
+          "}"
+        ]
+      }
+    }
+  ]
+} 

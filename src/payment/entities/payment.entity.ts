@@ -24,6 +24,33 @@ export class Payment extends BaseEntity {
   @Column({ nullable: true })
   receiptUrl?: string;
 
+  @Column({ nullable: true, unique: true })
+  transactionReference?: string;
+
+  @Column({ nullable: true })
+  hmoId?: string;
+
+  @Column({ nullable: true })
+  planId?: string;
+
+  @Column({ nullable: true })
+  paymentOptionId?: string;
+
+  @Column({ nullable: true })
+  customerEmail?: string;
+
+  @Column({ nullable: true })
+  customerPhone?: string;
+
+  @Column({ nullable: true })
+  customerName?: string;
+
+  @Column({ nullable: true })
+  paymentDate?: Date;
+
+  @Column({ nullable: true })
+  failureReason?: string;
+
   @ManyToOne(() => User, (user) => user.payments)
   user: User;
 

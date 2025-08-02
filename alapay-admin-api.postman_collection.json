@@ -1,0 +1,904 @@
+{
+  "info": {
+    "name": "ALAPAY Admin API",
+    "description": "Complete Postman collection for ALAPAY Admin API - User management, HMO management, Role management, and system administration",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:6526",
+      "type": "string"
+    },
+    {
+      "key": "apiVersion",
+      "value": "api/v1",
+      "type": "string"
+    },
+    {
+      "key": "jwtToken",
+      "value": "your_jwt_token_here",
+      "type": "string"
+    },
+    {
+      "key": "adminId",
+      "value": "123e4567-e89b-12d3-a456-426614174000",
+      "type": "string"
+    },
+    {
+      "key": "hmoId",
+      "value": "123e4567-e89b-12d3-a456-426614174001",
+      "type": "string"
+    },
+    {
+      "key": "roleId",
+      "value": "123e4567-e89b-12d3-a456-426614174002",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{jwtToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/{{apiVersion}}",
+          "host": ["{{baseUrl}}"],
+          "path": ["{{apiVersion}}"]
+        },
+        "description": "Check if the server is running and healthy"
+      },
+      "response": []
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Admin Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@alapay.com\",\n  \"password\": \"admin123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/sysadmins/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "sysadmins", "login"]
+            },
+            "description": "Login as admin to get JWT token"
+          },
+          "response": []
+        },
+        {
+          "name": "Admin Logout",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"token\": \"{{jwtToken}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/sysadmins/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "sysadmins", "logout"]
+            },
+            "description": "Logout admin and invalidate token"
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@alapay.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/sysadmins/reset-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "sysadmins", "reset-password"]
+            },
+            "description": "Send password reset email to admin"
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"oldPassword\": \"oldpassword123\",\n  \"newPassword\": \"newpassword123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/sysadmins/change-password",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "sysadmins", "change-password"]
+            },
+            "description": "Change admin password"
+          },
+          "response": []
+        }
+      ],
+      "description": "Authentication endpoints for admin users"
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Get Admin by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/admin/user?adminId={{adminId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "admin", "user"],
+              "query": [
+                {
+                  "key": "adminId",
+                  "value": "{{adminId}}"
+                }
+              ]
+            },
+            "description": "Get admin user details by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Admins by Role",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/admin/users/role?roleId={{roleId}}&page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "admin", "users", "role"],
+              "query": [
+                {
+                  "key": "roleId",
+                  "value": "{{roleId}}"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get all admins by role ID with pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Admins",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/admin/users?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "admin", "users"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get all admin users with pagination"
+          },
+          "response": []
+        },
+        {
+          "name": "Update Admin Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Updated\",\n  \"lastName\": \"Admin\",\n  \"email\": \"updated@alapay.com\",\n  \"phoneNumber\": \"+2348012345678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/admin/update-profile?userId={{adminId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "admin", "update-profile"],
+              "query": [
+                {
+                  "key": "userId",
+                  "value": "{{adminId}}"
+                }
+              ]
+            },
+            "description": "Update admin user profile"
+          },
+          "response": []
+        },
+        {
+          "name": "Create Superadmin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Super\",\n  \"lastName\": \"Admin\",\n  \"email\": \"superadmin@alapay.com\",\n  \"password\": \"superadmin123\",\n  \"phoneNumber\": \"+2348012345678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/admin/GciOiJIUzI1NiIsInR5cCI6Ik/superadmin",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "admin", "GciOiJIUzI1NiIsInR5cCI6Ik", "superadmin"]
+            },
+            "description": "Create a new superadmin user"
+          },
+          "response": []
+        },
+        {
+          "name": "Send Onboarding Link",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"newadmin@alapay.com\",\n  \"roleId\": \"{{roleId}}\",\n  \"firstName\": \"New\",\n  \"lastName\": \"Admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/admin/send-onboarding-link",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "admin", "send-onboarding-link"]
+            },
+            "description": "Send onboarding link to new admin user"
+          },
+          "response": []
+        },
+        {
+          "name": "Onboard HMO Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"HMO\",\n  \"lastName\": \"Admin\",\n  \"email\": \"hmo.admin@alapay.com\",\n  \"password\": \"hmo123\",\n  \"phoneNumber\": \"+2348012345678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/admin/{{roleId}}/onboard-hmo-admin-account?token=onboarding_token_here",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "admin", "{{roleId}}", "onboard-hmo-admin-account"],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "onboarding_token_here"
+                }
+              ]
+            },
+            "description": "Onboard HMO admin account"
+          },
+          "response": []
+        },
+        {
+          "name": "Onboard HMO Account",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Lagos State Health Management Agency\",\n  \"email\": \"info@lagoshmo.com\",\n  \"phoneNumber\": \"+2348012345678\",\n  \"address\": \"Lagos, Nigeria\",\n  \"licenseNumber\": \"LAGOS-HMO-001\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/admin/{{roleId}}/onboard-hmo-account?token=onboarding_token_here",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "admin", "{{roleId}}", "onboard-hmo-account"],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "onboarding_token_here"
+                }
+              ]
+            },
+            "description": "Onboard HMO organization account"
+          },
+          "response": []
+        },
+        {
+          "name": "Link Admin to HMO",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/admin/link-account?adminId={{adminId}}&hmoId={{hmoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "admin", "link-account"],
+              "query": [
+                {
+                  "key": "adminId",
+                  "value": "{{adminId}}"
+                },
+                {
+                  "key": "hmoId",
+                  "value": "{{hmoId}}"
+                }
+              ]
+            },
+            "description": "Link admin account to HMO"
+          },
+          "response": []
+        },
+        {
+          "name": "Verify User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/admin/verify-user?code=verification_code_here",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "admin", "verify-user"],
+              "query": [
+                {
+                  "key": "code",
+                  "value": "verification_code_here"
+                }
+              ]
+            },
+            "description": "Verify user account with verification code"
+          },
+          "response": []
+        },
+        {
+          "name": "Account Approval",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"APPROVED\",\n  \"reason\": \"Account approved after review\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/admin/verify-account?accountId={{adminId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "admin", "verify-account"],
+              "query": [
+                {
+                  "key": "accountId",
+                  "value": "{{adminId}}"
+                }
+              ]
+            },
+            "description": "Approve or reject user account"
+          },
+          "response": []
+        }
+      ],
+      "description": "User management endpoints for admin operations"
+    },
+    {
+      "name": "HMO Management",
+      "item": [
+        {
+          "name": "Verify HMO Account",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"APPROVED\",\n  \"reason\": \"HMO account verified and approved\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/hmo/verify-account?hmoId={{hmoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "hmo", "verify-account"],
+              "query": [
+                {
+                  "key": "hmoId",
+                  "value": "{{hmoId}}"
+                }
+              ]
+            },
+            "description": "Verify and approve HMO account"
+          },
+          "response": []
+        },
+        {
+          "name": "Update HMO Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated HMO Name\",\n  \"email\": \"updated@hmo.com\",\n  \"phoneNumber\": \"+2348012345678\",\n  \"address\": \"Updated Address, Lagos, Nigeria\",\n  \"licenseNumber\": \"UPDATED-LICENSE-001\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/hmo/update-hmo?hmoId={{hmoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "hmo", "update-hmo"],
+              "query": [
+                {
+                  "key": "hmoId",
+                  "value": "{{hmoId}}"
+                }
+              ]
+            },
+            "description": "Update HMO profile information"
+          },
+          "response": []
+        },
+        {
+          "name": "Get HMO by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/hmo/account?hmoId={{hmoId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "hmo", "account"],
+              "query": [
+                {
+                  "key": "hmoId",
+                  "value": "{{hmoId}}"
+                }
+              ]
+            },
+            "description": "Get HMO details by ID"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All HMOs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/hmo/accounts?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "hmo", "accounts"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            },
+            "description": "Get all HMOs with pagination"
+          },
+          "response": []
+        }
+      ],
+      "description": "HMO management endpoints"
+    },
+    {
+      "name": "Role Management",
+      "item": [
+        {
+          "name": "Create Role",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"HMO_ADMIN\",\n  \"description\": \"HMO Administrator Role\",\n  \"permissions\": [\"read\", \"write\", \"delete\"]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/role/create-role",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "role", "create-role"]
+            },
+            "description": "Create a new role"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Roles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/role/roles",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "role", "roles"]
+            },
+            "description": "Get all available roles"
+          },
+          "response": []
+        },
+        {
+          "name": "Get Role by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/role?roleId={{roleId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "role"],
+              "query": [
+                {
+                  "key": "roleId",
+                  "value": "{{roleId}}"
+                }
+              ]
+            },
+            "description": "Get role details by ID"
+          },
+          "response": []
+        }
+      ],
+      "description": "Role management endpoints"
+    },
+    {
+      "name": "Audit Logs",
+      "item": [
+        {
+          "name": "Get Audit Log",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/audit-log/log?logId=123",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "audit-log", "log"],
+              "query": [
+                {
+                  "key": "logId",
+                  "value": "123"
+                }
+              ]
+            },
+            "description": "Get specific audit log entry"
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Audit Logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/audit-log/logs?page=1&limit=10&startDate=2024-01-01&endDate=2024-12-31",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "audit-log", "logs"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                },
+                {
+                  "key": "startDate",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "endDate",
+                  "value": "2024-12-31"
+                }
+              ]
+            },
+            "description": "Get all audit logs with filtering and pagination"
+          },
+          "response": []
+        }
+      ],
+      "description": "Audit log management endpoints"
+    },
+    {
+      "name": "Test Data",
+      "item": [
+        {
+          "name": "Sample Admin Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@alapay.com\",\n  \"password\": \"admin123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/sysadmins/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "sysadmins", "login"]
+            },
+            "description": "Sample admin login with test credentials"
+          },
+          "response": []
+        },
+        {
+          "name": "Sample Create HMO Admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"email\": \"john.doe@hmo.com\",\n  \"password\": \"password123\",\n  \"phoneNumber\": \"+2348012345678\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/{{apiVersion}}/admin/{{roleId}}/onboard-hmo-admin-account?token=sample_token",
+              "host": ["{{baseUrl}}"],
+              "path": ["{{apiVersion}}", "admin", "{{roleId}}", "onboard-hmo-admin-account"],
+              "query": [
+                {
+                  "key": "token",
+                  "value": "sample_token"
+                }
+              ]
+            },
+            "description": "Sample HMO admin creation request"
+          },
+          "response": []
+        }
+      ],
+      "description": "Test data and sample requests"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Set default headers for all requests",
+          "pm.request.headers.add({\n    key: 'Accept',\n    value: 'application/json'\n});",
+          "",
+          "// Log request details for debugging",
+          "console.log('Request URL:', pm.request.url.toString());",
+          "console.log('Request Method:', pm.request.method);"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Common test script for all requests",
+          "pm.test('Status code is 200, 201, or 400', function () {",
+          "    pm.expect(pm.response.code).to.be.oneOf([200, 201, 400]);",
+          "});",
+          "",
+          "pm.test('Response has JSON content type', function () {",
+          "    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+          "});",
+          "",
+          "pm.test('Response time is less than 5000ms', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(5000);",
+          "});",
+          "",
+          "// Parse response body",
+          "const responseJson = pm.response.json();",
+          "",
+          "// Log response for debugging",
+          "console.log('Response:', JSON.stringify(responseJson, null, 2));",
+          "",
+          "// Store JWT token if present in login response",
+          "if (responseJson && responseJson.token) {",
+          "    pm.collectionVariables.set('jwtToken', responseJson.token);",
+          "    console.log('Stored JWT token:', responseJson.token);",
+          "}",
+          "",
+          "// Store admin ID if present",
+          "if (responseJson && responseJson.id) {",
+          "    pm.collectionVariables.set('adminId', responseJson.id);",
+          "    console.log('Stored admin ID:', responseJson.id);",
+          "}",
+          "",
+          "// Store HMO ID if present",
+          "if (responseJson && responseJson.hmoId) {",
+          "    pm.collectionVariables.set('hmoId', responseJson.hmoId);",
+          "    console.log('Stored HMO ID:', responseJson.hmoId);",
+          "}",
+          "",
+          "// Store role ID if present",
+          "if (responseJson && responseJson.roleId) {",
+          "    pm.collectionVariables.set('roleId', responseJson.roleId);",
+          "    console.log('Stored role ID:', responseJson.roleId);",
+          "}"
+        ]
+      }
+    }
+  ]
+} 

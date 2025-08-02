@@ -1,4 +1,5 @@
 import { Global, Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
 import { PaymentService } from './payment.service';
 import { PaymentController } from './payment.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -18,6 +19,9 @@ import { Transaction } from './entities/transaction.entity';
 import { TransactionRepository } from './repositories/transaction.repository';
 import { ClaimPaymentRepository } from './repositories/claim-payment.repository';
 import { ClaimPayment } from './entities/claim-payment.entity';
+import { InterswitchPaymentService } from './services/interswitch-payment.service';
+import { InterswitchConfigService } from '../config/interswitch.config';
+import { HmoRepository } from '../hmo/repositories/hmo.repository';
 
 @Global()
 @Module({
@@ -28,6 +32,10 @@ import { ClaimPayment } from './entities/claim-payment.entity';
       Transaction,
       ClaimPayment,
     ]),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '24h' },
+    }),
   ],
   providers: [
     PaymentService,
@@ -43,16 +51,20 @@ import { ClaimPayment } from './entities/claim-payment.entity';
     RoleRepository,
     TransactionRepository,
     ClaimPaymentRepository,
+    InterswitchPaymentService,
+    InterswitchConfigService,
+    HmoRepository,
   ],
   controllers: [PaymentController],
   exports: [
-    PaymentService,
     PaymentService,
     PaymentRepository,
     PaymentOptionRepository,
     DynamicRepositoryService,
     TransactionRepository,
     ClaimPaymentRepository,
+    InterswitchPaymentService,
+    InterswitchConfigService,
   ],
 })
 export class PaymentModule {}
